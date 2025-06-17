@@ -8,6 +8,7 @@ import (
 
 type UserService interface {
 	CreateUser(username, privacy string) (*entity.User, error)
+	GetUser(username string) (*entity.User, error)
 	ValidateUser(user *entity.User) error
 }
 
@@ -32,6 +33,10 @@ func (s *userService) CreateUser(username, privacy string) (*entity.User, error)
 	}
 
 	return s.userRepo.CreateUser(username, privacy)
+}
+
+func (s *userService) GetUser(username string) (*entity.User, error) {
+	return s.userRepo.GetUser(username)
 }
 
 func (s *userService) ValidateUser(user *entity.User) error {

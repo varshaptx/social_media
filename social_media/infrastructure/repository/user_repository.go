@@ -24,3 +24,15 @@ func (r *userRepository) CreateUser(username, privacy string) (*entity.User, err
 	r.users[username] = user
 	return user, nil
 }
+
+func (r *userRepository) GetUser(username string) (*entity.User, error) {
+	user, exists := r.users[username]
+	if !exists {
+		return nil, errors.New("user not found")
+	}
+	return user, nil
+}
+
+func (r *userRepository) GetAllUsers() map[string]*entity.User {
+	return r.users
+}

@@ -12,17 +12,19 @@ import (
 
 func main() {
 	userRepo := repository.NewUserRepository()
+	tweetRepo := repository.NewTweetRepository(userRepo.GetAllUsers())
 
 	userService := service.NewUserService(userRepo)
+	tweetService := service.NewTweetService(tweetRepo, userService)
 
-	userUseCase := usecase.NewUserUseCase(userService)
+	userUseCase := usecase.NewUserUseCase(userService, tweetService)
 
 	userHandler := handlers.NewUserHandler(userUseCase)
 
 	r := router.SetupRouter(userHandler)
 
-	fmt.Println("Server starting on :8080")
-	if err := r.Run(":8080"); err != nil {
+	fmt.Println("Server starting on :8085")
+	if err := r.Run(":8085"); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
 }

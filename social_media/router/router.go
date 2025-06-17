@@ -11,5 +11,12 @@ func SetupRouter(userHandler *handlers.UserHandler) *gin.Engine {
 
 	router.POST("/users", userHandler.CreateUser)
 
+	userGroup := router.Group("/users/:username")
+	{
+
+		userGroup.POST("/tweets", userHandler.PostTweet)
+
+	}
+
 	return router
 }
