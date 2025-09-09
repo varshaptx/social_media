@@ -36,3 +36,19 @@ func (r *userRepository) GetUser(username string) (*entity.User, error) {
 func (r *userRepository) GetAllUsers() map[string]*entity.User {
 	return r.users
 }
+
+func (r *userRepository) UpdateUser(user *entity.User) error {
+	if _, exists := r.users[user.Username]; !exists {
+		return errors.New("user not found")
+	}
+	r.users[user.Username] = user
+	return nil
+}
+
+func (r *userRepository) DeleteUser(username string) error {
+	if _, exists := r.users[username]; exists {
+		return errors.New("user not found")
+	}
+	delete(r.users, username)
+	return nil
+}

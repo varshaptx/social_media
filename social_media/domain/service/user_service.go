@@ -9,6 +9,9 @@ import (
 type UserService interface {
 	CreateUser(username, privacy string) (*entity.User, error)
 	GetUser(username string) (*entity.User, error)
+	GetAllUsers() map[string]*entity.User
+	UpdateUser(user *entity.User) error
+	DeleteUser(username string) error
 	ValidateUser(user *entity.User) error
 }
 
@@ -32,11 +35,31 @@ func (s *userService) CreateUser(username, privacy string) (*entity.User, error)
 		return nil, err
 	}
 
+	users := s.GetAllUsers()
+	if _, exists := users[username]; exists {
+		return nil, errors.New("user already exists")
+	}
+
 	return s.userRepo.CreateUser(username, privacy)
 }
 
 func (s *userService) GetUser(username string) (*entity.User, error) {
 	return s.userRepo.GetUser(username)
+}
+
+func (s *userService) GetAllUsers() map[string]*entity.User {
+	return s.userRepo.GetAllUsers()
+}
+
+func (s *userService) UpdateUser(user *entity.User) error {
+	if err := s.ValidateUser(user); err != nil {
+		return err
+	}
+	return s.userRepo.UpdateUser(user)
+}
+
+func (s *userService) DeleteUser(username string) error {
+	return s.userRepo.DeleteUser(username)
 }
 
 func (s *userService) ValidateUser(user *entity.User) error {
